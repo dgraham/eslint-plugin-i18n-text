@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-i18n-text",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Disallow English text in string literals",
   "repository": "dgraham/eslint-plugin-i18n-text",
   "license": "MIT",
