@@ -25,7 +25,11 @@ ruleTester.run('no-en', rule, {
     'function x() { return }',
     'function x() { return 42 }',
     'function x() { return "42" }',
-    'document.addEventListener("click", function(){})'
+    'document.addEventListener("click", function(){})',
+    'suite("Test suite", function(){})',
+    'test("Test something", function(){})',
+    'assert.equal(1, 2, "Should be false")',
+    'assert(false, "Should be true")'
   ],
   invalid: [
     {

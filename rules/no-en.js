@@ -17,6 +17,23 @@ function isInvariant(node) {
   return node.callee.type === 'Identifier' && node.callee.name === 'invariant'
 }
 
+function isSuite(node) {
+  return node.callee.type === 'Identifier' && node.callee.name === 'suite'
+}
+
+function isTest(node) {
+  return node.callee.type === 'Identifier' && node.callee.name === 'test'
+}
+
+function isAssert(node) {
+  const direct =
+    node.callee.type === 'Identifier' && node.callee.name === 'assert'
+  const member =
+    node.callee.type === 'MemberExpression' &&
+    node.callee.object.name === 'assert'
+  return direct || member
+}
+
 module.exports = function(context) {
   return {
     AssignmentExpression: function(node) {
@@ -25,8 +42,8 @@ module.exports = function(context) {
       }
     },
     CallExpression: function(node) {
-      if (isConsole(node)) return
-      if (isInvariant(node)) return
+      if (isConsole(node) || isInvariant(node)) return
+      if (isSuite(node) || isTest(node) || isAssert(node)) return
 
       for (const arg of node.arguments) {
         if (arg.type === 'Literal' && isEnglish(arg.value)) {
