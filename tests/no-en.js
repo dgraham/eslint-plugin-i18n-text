@@ -30,27 +30,27 @@ ruleTester.run('no-en', rule, {
   invalid: [
     {
       code: 'el.textContent = "Some message text"',
-      errors: [{message: error, type: 'AssignmentExpression'}]
+      errors: [{message: error, type: 'Literal'}]
     },
     {
       code: 'var message = "Some message text"',
-      errors: [{message: error, type: 'VariableDeclarator'}]
+      errors: [{message: error, type: 'Literal'}]
     },
     {
       code: 'message = "Some message text"',
-      errors: [{message: error, type: 'AssignmentExpression'}]
+      errors: [{message: error, type: 'Literal'}]
     },
     {
       code: 'function x() { return "Some message text" }',
-      errors: [{message: error, type: 'ReturnStatement'}]
+      errors: [{message: error, type: 'Literal'}]
     },
     {
       code: 'displayMessage("Some message text")',
-      errors: [{message: error, type: 'CallExpression'}]
+      errors: [{message: error, type: 'Literal'}]
     },
     {
       code: 'list.push("Some message text")',
-      errors: [{message: error, type: 'CallExpression'}]
+      errors: [{message: error, type: 'Literal'}]
     }
   ]
 })
