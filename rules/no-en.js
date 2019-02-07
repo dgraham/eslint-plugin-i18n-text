@@ -39,6 +39,10 @@ module.exports = function(context) {
     AssignmentExpression: function(node) {
       if (node.right.type === 'Literal' && isEnglish(node.right.value)) {
         context.report({node: node.right, message})
+      } else if (node.right.type === 'TemplateLiteral') {
+        if (node.right.quasis.some(el => isEnglish(el.value.raw))) {
+          context.report({node: node.right, message})
+        }
       }
     },
     CallExpression: function(node) {
@@ -48,25 +52,33 @@ module.exports = function(context) {
       for (const arg of node.arguments) {
         if (arg.type === 'Literal' && isEnglish(arg.value)) {
           context.report({node: arg, message})
+        } else if (arg.type === 'TemplateLiteral') {
+          if (arg.quasis.some(el => isEnglish(el.value.raw))) {
+            context.report({node: arg, message})
+          }
         }
       }
     },
     ReturnStatement: function(node) {
-      if (
-        node.argument &&
-        node.argument.type === 'Literal' &&
-        isEnglish(node.argument.value)
-      ) {
+      if (!node.argument) return
+
+      if (node.argument.type === 'Literal' && isEnglish(node.argument.value)) {
         context.report({node: node.argument, message})
+      } else if (node.argument.type === 'TemplateLiteral') {
+        if (node.argument.quasis.some(el => isEnglish(el.value.raw))) {
+          context.report({node: node.argument, message})
+        }
       }
     },
     VariableDeclarator: function(node) {
-      if (
-        node.init &&
-        node.init.type === 'Literal' &&
-        isEnglish(node.init.value)
-      ) {
+      if (!node.init) return
+
+      if (node.init.type === 'Literal' && isEnglish(node.init.value)) {
         context.report({node: node.init, message})
+      } else if (node.init.type === 'TemplateLiteral') {
+        if (node.init.quasis.some(el => isEnglish(el.value.raw))) {
+          context.report({node: node.init, message})
+        }
       }
     }
   }
