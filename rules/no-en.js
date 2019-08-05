@@ -79,6 +79,17 @@ module.exports = function(context) {
         if (node.init.quasis.some(el => isEnglish(el.value.raw))) {
           context.report({node: node.init, message})
         }
+      } else if (node.init.type === 'LogicalExpression') {
+        const nodes = [node.init.left, node.init.right]
+        nodes.forEach(childNode => {
+          if (childNode.type === 'Literal' && isEnglish(childNode.value)) {
+            context.report({node: childNode, message})
+          } else if (childNode.type === 'TemplateLiteral') {
+            if (childNode.quasis.some(el => isEnglish(el.value.raw))) {
+              context.report({node: childNode, message})
+            }
+          }
+        })
       }
     }
   }
