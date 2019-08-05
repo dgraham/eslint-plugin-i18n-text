@@ -49,12 +49,29 @@ module.exports = function(context) {
       if (isConsole(node) || isInvariant(node)) return
       if (isSuite(node) || isTest(node) || isAssert(node)) return
 
+      // the function args
+      // eg. foo.bar("string") <-- "string" is the arg
       for (const arg of node.arguments) {
         if (arg.type === 'Literal' && isEnglish(arg.value)) {
           context.report({node: arg, message})
         } else if (arg.type === 'TemplateLiteral') {
           if (arg.quasis.some(el => isEnglish(el.value.raw))) {
             context.report({node: arg, message})
+          }
+        }
+      }
+
+      // whatever the function is being called on
+      // eg. "string".foo() <-- "string" is the callee
+      if (node.callee && node.callee.object) {
+        if (
+          node.callee.object.type === 'Literal' &&
+          isEnglish(node.callee.object.value)
+        ) {
+          context.report({node: node.callee.object, message})
+        } else if (node.callee.object.type === 'TemplateLiteral') {
+          if (node.callee.object.quasis.some(el => isEnglish(el.value.raw))) {
+            context.report({node: node.callee.object, message})
           }
         }
       }
