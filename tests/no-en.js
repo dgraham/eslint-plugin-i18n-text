@@ -64,6 +64,14 @@ ruleTester.run('no-en', rule, {
       errors: [{message: error, type: 'Literal'}]
     },
     {
+      code: '"Some message".toUpperCase()',
+      errors: [{message: error, type: 'Literal'}]
+    },
+    {
+      code: 'var upcased = "Some message".toUpperCase()',
+      errors: [{message: error, type: 'Literal'}]
+    },
+    {
       code: 'el.textContent = `Some ${x} message text`',
       errors: [{message: error, type: 'TemplateLiteral'}]
     },
@@ -89,6 +97,14 @@ ruleTester.run('no-en', rule, {
     },
     {
       code: 'list.push(`Some message text`)',
+      errors: [{message: error, type: 'TemplateLiteral'}]
+    },
+    {
+      code: '`Some message`.toUpperCase()',
+      errors: [{message: error, type: 'TemplateLiteral'}]
+    },
+    {
+      code: 'var upcased = `Some message`.toUpperCase()',
       errors: [{message: error, type: 'TemplateLiteral'}]
     }
   ]
