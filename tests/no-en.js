@@ -90,6 +90,14 @@ ruleTester.run('no-en', rule, {
     {
       code: 'list.push(`Some message text`)',
       errors: [{message: error, type: 'TemplateLiteral'}]
+    },
+    {
+      code: "someValue || 'Something went wrong'",
+      errors: [{message: error, type: 'Literal'}]
+    },
+    {
+      code: 'someValue || `Something went ${adjective} wrong`',
+      errors: [{message: error, type: 'TemplateLiteral'}]
     }
   ]
 })

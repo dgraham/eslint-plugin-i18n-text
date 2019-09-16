@@ -36,6 +36,15 @@ function isAssert(node) {
 
 module.exports = function(context) {
   return {
+    LogicalExpression: function(node) {
+      if (node.right.type === 'Literal' && isEnglish(node.right.value)) {
+        context.report({node: node.right, message})
+      } else if (node.right.type === 'TemplateLiteral') {
+        if (node.right.quasis.some(el => isEnglish(el.value.raw))) {
+          context.report({node: node.right, message})
+        }
+      }
+    },
     AssignmentExpression: function(node) {
       if (node.right.type === 'Literal' && isEnglish(node.right.value)) {
         context.report({node: node.right, message})
