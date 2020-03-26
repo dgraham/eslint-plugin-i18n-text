@@ -34,9 +34,9 @@ function isAssert(node) {
   return direct || member
 }
 
-module.exports = function(context) {
+module.exports = function (context) {
   return {
-    LogicalExpression: function(node) {
+    LogicalExpression: function (node) {
       if (node.right.type === 'Literal' && isEnglish(node.right.value)) {
         context.report({node: node.right, message})
       } else if (node.right.type === 'TemplateLiteral') {
@@ -45,7 +45,7 @@ module.exports = function(context) {
         }
       }
     },
-    AssignmentExpression: function(node) {
+    AssignmentExpression: function (node) {
       if (node.right.type === 'Literal' && isEnglish(node.right.value)) {
         context.report({node: node.right, message})
       } else if (node.right.type === 'TemplateLiteral') {
@@ -54,7 +54,7 @@ module.exports = function(context) {
         }
       }
     },
-    CallExpression: function(node) {
+    CallExpression: function (node) {
       if (isConsole(node) || isInvariant(node)) return
       if (isSuite(node) || isTest(node) || isAssert(node)) return
 
@@ -68,7 +68,7 @@ module.exports = function(context) {
         }
       }
     },
-    ReturnStatement: function(node) {
+    ReturnStatement: function (node) {
       if (!node.argument) return
 
       if (node.argument.type === 'Literal' && isEnglish(node.argument.value)) {
@@ -79,7 +79,7 @@ module.exports = function(context) {
         }
       }
     },
-    VariableDeclarator: function(node) {
+    VariableDeclarator: function (node) {
       if (!node.init) return
 
       if (node.init.type === 'Literal' && isEnglish(node.init.value)) {
