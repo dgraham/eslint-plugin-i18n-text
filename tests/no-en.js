@@ -76,6 +76,18 @@ ruleTester.run('no-en', rule, {
       errors: [{message: error, type: 'TemplateLiteral'}]
     },
     {
+      code: 'var message = possibly_undefined_variable || `Some message text`',
+      errors: [{message: error, type: 'TemplateLiteral'}]
+    },
+    {
+      code: 'var message = possibly_undefined_variable || "Some message text"',
+      errors: [{message: error, type: 'Literal'}]
+    },
+    {
+      code: 'var message = "Some message text" || a_variable',
+      errors: [{message: error, type: 'Literal'}]
+    },
+    {
       code: 'message = `Some message text`',
       errors: [{message: error, type: 'TemplateLiteral'}]
     },
