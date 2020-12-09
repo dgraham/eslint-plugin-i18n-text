@@ -38,12 +38,20 @@ ruleTester.run('no-en', rule, {
     'assert(false, "Should be true")',
     'assert(false, `Should be true`)',
     {
-      code: 'Sentry.captureMessage("Error message")',
+      code: 'Sentry.captureMessage("Error message 1")',
       options: [{excludes: ['Sentry']}]
     },
     {
-      code: 'Sentry.captureMessage("Error message")',
+      code: 'Sentry.captureMessage("Error message 2")',
       options: [{excludes: ['captureMessage']}]
+    },
+    {
+      code: 'A.Really.Deep.Function.Call("Error message")',
+      options: [{excludes: ['A.Really.Deep.Function.Call']}]
+    },
+    {
+      code: 'Sentry.captureMessage("Error message 3")',
+      options: [{excludes: ['Sentry.captureMessage']}]
     }
   ],
   invalid: [
@@ -108,8 +116,13 @@ ruleTester.run('no-en', rule, {
       errors: [{message: error, type: 'TemplateLiteral'}]
     },
     {
-      code: 'Sentry.captureMessage("Error message")',
+      code: 'Sentry.captureMessage("Error message 1")',
       options: [{excludes: ['Not this function']}],
+      errors: [{message: error, type: 'Literal'}]
+    },
+    {
+      code: 'Sentry.captureMessage("Error message 2")',
+      options: [{excludes: ['Sentry.otherFunction']}],
       errors: [{message: error, type: 'Literal'}]
     }
   ]

@@ -41,6 +41,20 @@ function matchesExcludesOption(node, context) {
 
   const excludes = context.options[0].excludes
   return excludes.some(exclude => {
+    if (exclude.includes('.')) {
+      const parts = exclude.split('.')
+      const lastPart = parts.shift()
+      let currentNode = node.callee
+      for (const part of parts.reverse()) {
+        if (!currentNode.property || part !== currentNode.property.name) {
+          return false
+        }
+        currentNode = currentNode.object
+      }
+
+      return currentNode.name === lastPart
+    }
+
     const direct =
       node.callee.type === 'Identifier' && node.callee.name === exclude
     const member =
