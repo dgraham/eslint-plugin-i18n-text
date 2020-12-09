@@ -34,6 +34,39 @@ function isAssert(node) {
   return direct || member
 }
 
+function matchesExcludesOption(node, context) {
+  if (!context.options[0] || !context.options[0].excludes) {
+    return false
+  }
+
+  const excludes = context.options[0].excludes
+  return excludes.some(exclude => {
+    if (exclude.includes('.')) {
+      const parts = exclude.split('.')
+      const lastPart = parts.shift()
+      let currentNode = node.callee
+      for (const part of parts.reverse()) {
+        if (!currentNode.property || part !== currentNode.property.name) {
+          return false
+        }
+        currentNode = currentNode.object
+      }
+
+      return currentNode.name === lastPart
+    }
+
+    const direct =
+      node.callee.type === 'Identifier' && node.callee.name === exclude
+    const member =
+      node.callee.type === 'MemberExpression' &&
+      node.callee.object.name === exclude
+    const child =
+      node.callee.type === 'MemberExpression' &&
+      node.callee.property.name === exclude
+    return direct || member || child
+  })
+}
+
 module.exports = function (context) {
   return {
     LogicalExpression: function (node) {
@@ -57,6 +90,7 @@ module.exports = function (context) {
     CallExpression: function (node) {
       if (isConsole(node) || isInvariant(node)) return
       if (isSuite(node) || isTest(node) || isAssert(node)) return
+      if (matchesExcludesOption(node, context)) return
 
       for (const arg of node.arguments) {
         if (arg.type === 'Literal' && isEnglish(arg.value)) {
@@ -93,4 +127,16 @@ module.exports = function (context) {
   }
 }
 
-module.exports.schema = []
+module.exports.schema = [
+  {
+    type: 'object',
+    properties: {
+      excludes: {
+        type: 'array',
+        items: {
+          type: 'string'
+        }
+      }
+    }
+  }
+]
