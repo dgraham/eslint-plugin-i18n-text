@@ -36,7 +36,15 @@ ruleTester.run('no-en', rule, {
     'test("Test something", function(){})',
     'assert.equal(1, 2, "Should be false")',
     'assert(false, "Should be true")',
-    'assert(false, `Should be true`)'
+    'assert(false, `Should be true`)',
+    {
+      code: 'Sentry.captureMessage("Error message")',
+      options: [{excludes: ['Sentry']}]
+    },
+    {
+      code: 'Sentry.captureMessage("Error message")',
+      options: [{excludes: ['captureMessage']}]
+    }
   ],
   invalid: [
     {
@@ -98,6 +106,11 @@ ruleTester.run('no-en', rule, {
     {
       code: 'someValue || `Something went ${adjective} wrong`',
       errors: [{message: error, type: 'TemplateLiteral'}]
+    },
+    {
+      code: 'Sentry.captureMessage("Error message")',
+      options: [{excludes: ['Not this function']}],
+      errors: [{message: error, type: 'Literal'}]
     }
   ]
 })
