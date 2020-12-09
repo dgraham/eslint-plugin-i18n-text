@@ -124,6 +124,16 @@ ruleTester.run('no-en', rule, {
       code: 'Sentry.captureMessage("Error message 2")',
       options: [{excludes: ['Sentry.otherFunction']}],
       errors: [{message: error, type: 'Literal'}]
+    },
+    {
+      code: 'Sentry.captureMessage("Error message 3")',
+      options: [{excludes: ['Sentry.captureMessage.Not.A.Function']}],
+      errors: [{message: error, type: 'Literal'}]
+    },
+    {
+      code: 'Sentry.captureMessage("Error message 4")',
+      options: [{excludes: ['A.Really.Deep.Function.Call']}],
+      errors: [{message: error, type: 'Literal'}]
     }
   ]
 })
